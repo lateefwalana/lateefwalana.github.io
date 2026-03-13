@@ -18,9 +18,71 @@
 
 <body class="main-content">
     <main>
-        <section class="container about" id="about">
+        <article class="container about" id="about">
+            <header class="main-title">
+                <h2>Arista AVD: Network Automation for Large-Scale Enterprise</h2>
+                <p class="port-text">An Arista AVD introduction and technical value proposition for network engineers.</p>
+            </header>
 
-        </section>
+            <section>
+                <h3>Why Arista AVD?</h3>
+                <p>Arista AVD (Arista Validated Designs) is a structured, Ansible-based architecture framework designed to
+                simplify deployment, reduce configuration drift, and accelerate multi-site network rollout. It provides
+                repeatable templates, robust validation, and operational best practices for modern campus and WAN fabrics.</p>
+            </section>
+
+            <section>
+                <h3>Core benefits</h3>
+                <ul>
+                    <li><strong>Consistency</strong>: Declarative inventory and templating ensure identical builds across sites.</li>
+                    <li><strong>Speed</strong>: Pre-defined network patterns reduce design-to-deploy from months to days.</li>
+                    <li><strong>Scale</strong>: Native support for large fabric deployments with VXLAN EVPN, MLAG, BGP, and segment routing.</li>
+                    <li><strong>Automation</strong>: Ansible playbooks, tests, and automated rendering eliminate manual CLI scripting.</li>
+                    <li><strong>Observability</strong>: Integration with CloudVision and streaming telemetry improves visibility.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Key components</h3>
+                <p>AVD is built on a set of modular roles and inventories:</p>
+                <ol>
+                    <li><strong>Design model</strong>: YAML-driven site, role, and segment definitions.</li>
+                    <li><strong>Role-based playbooks</strong>: Deploy EOS config via staged playbooks (build, deploy, verify).</li>
+                    <li><strong>Platform support</strong>: 7000/7200/7800/7500 Series with EOS featureset compatibility.</li>
+                    <li><strong>Validation tests</strong>: Pre- and post- deployment sanity checks using pyATS and NetBox yardstick.</li>
+                </ol>
+            </section>
+
+            <section>
+                <h3>Practical use case</h3>
+                <p>As a senior network engineer, I used Arista AVD to standardize a multi-site corporate campus setup.
+                We defined a common site template with two spine leaf fabrics, OSPF underlay, and EVPN-VXLAN overlay.
+                With AVD, the team had rollouts ready for automation in 2 weeks and deployment for each site in under 4 hours.</p>
+            </section>
+
+            <section>
+                <h3>Getting started</h3>
+                <p>Follow these steps:</p>
+                <ul>
+                    <li>Clone the Arista AVD repository from GitHub.</li>
+                    <li>Create an Ansible inventory for your topology (spines, leaves, border nodes).</li>
+                    <li>Customize site variables for VLANs, BGP, QoS, and APC using role variables.</li>
+                    <li>Run `ansible-playbook -i inventory/hosts.yaml playbooks/site.yml` and validate.</li>
+                    <li>Integrate with CloudVision for telemetry and drift detection.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Conclusion</h3>
+                <p>Arista AVD is a strong choice for network teams who want a proven, vendor-backed way to deliver network
+                infrastructure as code. It reduces risk, enforces consistency, and moves teams towards DevOps practices
+                in networking.</p>
+            </section>
+
+            <footer>
+                <p>Published by <strong>Muhammad Lateef</strong> • Network Engineer, Cloud & Automation</p>
+            </footer>
+        </article>
     </main>
 
     <div class="controls">

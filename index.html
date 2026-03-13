@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Muhammad Lateef | Network Engineer portfolio with experience in routing, switching, VMware and firewalls.">
     <title>Portfolio</title>
     <!-- Stylesheets and Fonts -->
     <link rel="stylesheet" href="styles/styles.css">
@@ -506,35 +507,39 @@
                         </div>
                         <div class="contact-icons">
                             <div class="contact-icon">
-                                <a href="https://www.twitter.com/lateefwalana" target="_blank">
-                                    <i class="fab fa-twitter"></i>
+                                <a href="https://www.twitter.com/lateefwalana" target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-twitter" aria-hidden="true"></i>
                                 </a>
-                                <a href="https://github.com/lateefwalana" target="_blank">
-                                    <i class="fab fa-github"></i>
+                                <a href="https://github.com/lateefwalana" target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-github" aria-hidden="true"></i>
                                 </a>
-                                <a href="#" target="_blank">
-                                    <i class="fab fa-youtube"></i>
+                                <a href="javascript:void(0)" aria-label="YouTube (coming soon)">
+                                    <i class="fab fa-youtube" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="right-contact">
-                        <form action="" class="contact-form">
+                        <form action="/contact" method="POST" class="contact-form" aria-label="Contact form">
                             <div class="input-control i-c-2">
-                                <input type="text" required placeholder="YOUR NAME">
-                                <input type="email" required placeholder="YOUR EMAIL">
+                                <label for="name" class="sr-only">Your Name</label>
+                                <input id="name" name="name" type="text" required placeholder="YOUR NAME">
+                                <label for="email" class="sr-only">Your Email</label>
+                                <input id="email" name="email" type="email" required placeholder="YOUR EMAIL">
                             </div>
                             <div class="input-control">
-                                <input type="text" required placeholder="ENTER SUBJECT">
+                                <label for="subject" class="sr-only">Subject</label>
+                                <input id="subject" name="subject" type="text" required placeholder="ENTER SUBJECT">
                             </div>
                             <div class="input-control">
-                                <textarea name="" id="" cols="15" rows="8" placeholder="Message Here..."></textarea>
+                                <label for="message" class="sr-only">Message</label>
+                                <textarea id="message" name="message" cols="15" rows="8" required placeholder="Message Here..."></textarea>
                             </div>
                             <div class="submit-btn">
-                                <a href="files/CV190123.pdf" download class="main-btn">
-                                    <span class="btn-text">Download CV</span>
-                                    <span class="btn-icon"><i class="fas fa-download"></i></span>
-                                </a>
+                                <button type="submit" class="main-btn">
+                                    <span class="btn-text">Send Message</span>
+                                    <span class="btn-icon"><i class="fas fa-paper-plane"></i></span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -543,23 +548,23 @@
         </section>
     </main>
     <!-- Other sections -->
-    <div class="controls">
-        <div class="control active-btn" data-id="home" >
-            <i class="fas fa-home"></i>
-        </div>
-        <div class="control" data-id="about">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="control" data-id="portfolio">
-            <i class="fas fa-briefcase"></i>
-        </div>
-        <div class="control" data-id="blogs">
-            <i class="far fa-newspaper"></i>
-        </div>
-        <div class="control" data-id="contact">
-            <i class="fas fa-envelope-open"></i>
-        </div>
-    </div>
+    <nav class="controls" aria-label="Section navigation">
+        <button class="control active-btn" data-id="home" aria-label="Home">
+            <i class="fas fa-home" aria-hidden="true"></i>
+        </button>
+        <button class="control" data-id="about" aria-label="About">
+            <i class="fas fa-user" aria-hidden="true"></i>
+        </button>
+        <button class="control" data-id="portfolio" aria-label="Portfolio">
+            <i class="fas fa-briefcase" aria-hidden="true"></i>
+        </button>
+        <button class="control" data-id="blogs" aria-label="Blogs">
+            <i class="far fa-newspaper" aria-hidden="true"></i>
+        </button>
+        <button class="control" data-id="contact" aria-label="Contact">
+            <i class="fas fa-envelope-open" aria-hidden="true"></i>
+        </button>
+    </nav>
     <div class="theme-btn">
         <i class="fas fa-adjust"></i>
     </div>

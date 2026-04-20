@@ -4,32 +4,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Muhammad Lateef | Network Engineer portfolio with experience in routing, switching, VMware and firewalls.">
-    <title>Portfolio</title>
-    <!-- Stylesheets and Fonts -->
+    <meta name="description" content="Muhammad Lateef | Senior Network Engineer — Edinburgh. CCNP, VMware, Cisco, Firewall, Automation.">
+    <title>Muhammad Lateef · Network Engineer</title>
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="styles/styles.css">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Fonts: JetBrains Mono (headings/mono) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="main-content">
+
+    <!-- Particle network canvas -->
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
     <header class="container header active" id="home">
         <div class="header-content">
             <div class="left-header">
-                <div class="h-shape"></div>
                 <div class="image">
-                    <img src="img/hero.png" alt="">
+                    <img src="img/hero.png" alt="Muhammad Lateef">
                 </div>
             </div>
             <div class="right-header">
+                <p class="hero-tag">Senior Network Engineer</p>
                 <h1 class="name">
                     Hi, I'm <span>Muhammad Lateef.</span>
-                    A Network Engineer.
+                    <span class="role">Building resilient networks.<span class="cursor"></span></span>
                 </h1>
                 <p>
-                    I'm a Network Engineer. I love to build functional and resilient networks.
-                    Networks are digital roads for deploying applications like Twitter and google maps etc.. 
+                    10+ years designing and securing enterprise networks across public and private sectors.
+                    CCNP · VCP · Cisco · Firewall · Automation.
                 </p>
                 <div class="btn-con">
                     <a href="files/CV02072024.pdf" download class="main-btn">
@@ -40,23 +46,23 @@
             </div>
         </div>
     </header>
+
     <main>
         <section class="container about" id="about">
             <div class="main-title">
-                <h2>About <span>me</span><span class="bg-text">my stats</span></h2>
+                <h2>About <span>me</span><span class="bg-text">about</span></h2>
             </div>
             <div class="about-container">
                 <div class="left-about">
-                    <h4>Information About me</h4>
+                    <h4>Who I am</h4>
                     <p>
-                        I am a highly motivated, skilled and qualified Network Engineer 
-                        with over 10 years commercial experience working within various 
-                        private sector and public sector fast paced dynamic environments.
-                        My experience includes (but not limited to) Design, Security, Wireless, 
-                        Project and BAU work. <br /> <br /> 
+                        I am a highly motivated Senior Network Engineer with over 10 years of commercial
+                        experience working in fast-paced private and public sector environments.
+                        My expertise spans network design, perimeter security, wireless infrastructure,
+                        virtualisation, and infrastructure automation.
                     </p>
                     <div class="btn-con">
-                        <a href="files/CV190123.pdf" download class="main-btn">
+                        <a href="files/CV02072024.pdf" download class="main-btn">
                             <span class="btn-text">Download CV</span>
                             <span class="btn-icon"><i class="fas fa-download"></i></span>
                         </a>
@@ -89,431 +95,247 @@
                     </div>
                 </div>
             </div>
+
             <div class="about-stats">
-                <h4 class="stat-title">My Skills</h4>
+                <h4 class="stat-title">Technical Skills</h4>
                 <div class="progress-bars">
                     <div class="progress-bar">
                         <p class="prog-title">Routing</p>
                         <div class="progress-con">
                             <p class="prog-text">90%</p>
-                            <div class="progress">
-                                <span class="html"></span>
-                            </div>
+                            <div class="progress"><span class="html"></span></div>
                         </div>
                     </div>
                     <div class="progress-bar">
                         <p class="prog-title">Switching</p>
                         <div class="progress-con">
                             <p class="prog-text">95%</p>
-                            <div class="progress">
-                                <span class="css"></span>
-                            </div>
+                            <div class="progress"><span class="css"></span></div>
                         </div>
                     </div>
                     <div class="progress-bar">
                         <p class="prog-title">VMware</p>
                         <div class="progress-con">
                             <p class="prog-text">85%</p>
-                            <div class="progress">
-                                <span class="js"></span>
-                            </div>
+                            <div class="progress"><span class="js"></span></div>
                         </div>
                     </div>
                     <div class="progress-bar">
                         <p class="prog-title">Firewall</p>
                         <div class="progress-con">
                             <p class="prog-text">80%</p>
-                            <div class="progress">
-                                <span class="react"></span>
-                            </div>
+                            <div class="progress"><span class="react"></span></div>
                         </div>
                     </div>
                     <div class="progress-bar">
                         <p class="prog-title">Ansible</p>
                         <div class="progress-con">
                             <p class="prog-text">65%</p>
-                            <div class="progress">
-                                <span class="node"></span>
-                            </div>
+                            <div class="progress"><span class="node"></span></div>
                         </div>
                     </div>
                     <div class="progress-bar">
                         <p class="prog-title">Python</p>
                         <div class="progress-con">
                             <p class="prog-text">50%</p>
-                            <div class="progress">
-                                <span class="python"></span>
-                            </div>
+                            <div class="progress"><span class="python"></span></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <h4 class="stat-title">My Timeline</h4>
+
+            <h4 class="stat-title">Experience</h4>
             <div class="timeline">
                 <div class="timeline-item">
-                    <div class="tl-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <p class="tl-duration">2019 - present</p>
-                    <h5>Senior Network Engineer<span> - Registers of Scotland</span></h5>
-                    <p>
-                        Covering Network, Parameter Security and Virtualisation. 
-                    </p>
+                    <div class="tl-icon"><i class="fas fa-network-wired"></i></div>
+                    <p class="tl-duration">2019 — present</p>
+                    <h5>Senior Network Engineer<span>Registers of Scotland</span></h5>
+                    <p>Covering network, perimeter security and virtualisation across production environments.</p>
                 </div>
                 <div class="timeline-item">
-                    <div class="tl-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <p class="tl-duration">2018 - 2019</p>
-                    <h5>Senior Network & Security Engineer<span> - FNZ (UK) LTD</span></h5>
-                    <p>
-                        Worked closely with Platform team for new networks provisioning, routing and firewall policy management.
-                    </p>
+                    <div class="tl-icon"><i class="fas fa-shield-alt"></i></div>
+                    <p class="tl-duration">2018 — 2019</p>
+                    <h5>Senior Network &amp; Security Engineer<span>FNZ (UK) Ltd</span></h5>
+                    <p>New networks provisioning, routing design and firewall policy management alongside the Platform team.</p>
                 </div>
                 <div class="timeline-item">
-                    <div class="tl-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <p class="tl-duration">2017 - 2018</p>
-                    <h5>Senior Network Engineer<span> - Registers of Scotland</span></h5>
-                    <p>
-                        Mixture of Site Reliability Engineering and automation across development and production environments, 
-                        embedding DevOps processes and Cloud principles 12 Factor, Infrastructure as code.
-                        Network architecture BGP deployment 
-                    </p>
+                    <div class="tl-icon"><i class="fas fa-server"></i></div>
+                    <p class="tl-duration">2017 — 2018</p>
+                    <h5>Senior Network Engineer<span>Registers of Scotland</span></h5>
+                    <p>Site Reliability Engineering and automation across dev/prod environments. BGP network architecture deployment. Infrastructure as Code.</p>
                 </div>
                 <div class="timeline-item">
-                    <div class="tl-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <p class="tl-duration">2016 - 2017</p>
-                    <h5>Network Engineer<span> - Atos, BBC Contract</span></h5>
-                    <p>
-                        Designed and implemented Enterprise WAN Core.
-                    </p>
+                    <div class="tl-icon"><i class="fas fa-broadcast-tower"></i></div>
+                    <p class="tl-duration">2016 — 2017</p>
+                    <h5>Network Engineer<span>Atos · BBC Contract</span></h5>
+                    <p>Designed and implemented Enterprise WAN Core infrastructure.</p>
                 </div>
                 <div class="timeline-item">
-                    <div class="tl-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <p class="tl-duration">2012 - 2016</p>
-                    <h5>Cloud Platform Network Specialist<span> - Registers of Scotland</span></h5>
-                    <p>
-                        Complete redesign and delivery of the underlying network infrastructure to enable the business 
-                        to move towards Virtualisation of the production environment.
-                        
-                    </p>
+                    <div class="tl-icon"><i class="fas fa-cloud"></i></div>
+                    <p class="tl-duration">2012 — 2016</p>
+                    <h5>Cloud Platform Network Specialist<span>Registers of Scotland</span></h5>
+                    <p>Complete redesign and delivery of network infrastructure to enable production environment virtualisation.</p>
                 </div>
                 <div class="timeline-item">
-                    <div class="tl-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <p class="tl-duration">2011 - 2012</p>
-                    <h5>Network Engineer<span> - Coventry University</span></h5>
-                    <p>
-                        BAU and Project engineer as required.<br />
-                        Call Manager (v8) administration.<br />
-                        Installation and configuring Cisco Security Appliance.<br />
-                        Installation/maintenance of 200 Wireless APs, with detailed heat maps for each floor. <br />
-                        Solarwinds integration of all networking devices.<br />
-                        Documented the whole network with detailed topology diagrams <br />
-                        Populated 5760 ports onto Caplum database for ease of trouble shooting.<br />
-                        Upgraded existing links between sites form 1G to 10G.<br />
-                        Upgrade of data cabinets and related patching.
-                    </p>
+                    <div class="tl-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <p class="tl-duration">2011 — 2012</p>
+                    <h5>Network Engineer<span>Coventry University</span></h5>
+                    <p>BAU and project engineering. Cisco Call Manager, 200 wireless APs, SolarWinds integration, 1G→10G inter-site upgrades, full network documentation.</p>
                 </div>
             </div>
         </section>
+
         <section class="container" id="portfolio">
             <div class="main-title">
-                <h2>My <span>Portfolio</span><span class="bg-text">My Work</span></h2>
+                <h2>My <span>Portfolio</span><span class="bg-text">work</span></h2>
             </div>
-            <p class="port-text">
-                This page is under Constuction!
-            </p>
+            <p class="port-text">Projects coming soon — check back shortly.</p>
             <div class="portfolios">
                 <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port1.jpg" alt="">
-                    </div>
+                    <div class="image"><img src="img/port1.jpg" alt="Project 1"></div>
                     <div class="hover-items">
                         <h3>Project Source</h3>
                         <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                            <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port2.jpg" alt="">
-                    </div>
+                    <div class="image"><img src="img/port2.jpg" alt="Project 2"></div>
                     <div class="hover-items">
                         <h3>Project Source</h3>
                         <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                            <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port3.jpg" alt="">
-                    </div>
+                    <div class="image"><img src="img/port3.jpg" alt="Project 3"></div>
                     <div class="hover-items">
                         <h3>Project Source</h3>
                         <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                            <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port4.jpg" alt="">
-                    </div>
+                    <div class="image"><img src="img/port4.jpg" alt="Project 4"></div>
                     <div class="hover-items">
                         <h3>Project Source</h3>
                         <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                            <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port5.jpg" alt="">
-                    </div>
+                    <div class="image"><img src="img/port5.jpg" alt="Project 5"></div>
                     <div class="hover-items">
                         <h3>Project Source</h3>
                         <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                            <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port2.jpg" alt="">
-                    </div>
+                    <div class="image"><img src="img/port7.jpg" alt="Project 6"></div>
                     <div class="hover-items">
                         <h3>Project Source</h3>
                         <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="portfolio-item">
-                    <div class="image">
-                        <img src="img/port7.jpg" alt="">
-                    </div>
-                    <div class="hover-items">
-                        <h3>Project Source</h3>
-                        <div class="icons">
-                            <a href="#" class="icon">
-                                <i class="fab fa-github"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-behance"></i>
-                            </a>
-                            <a href="#" class="icon">
-                                <i class="fab fa-youtube"></i>
-                            </a>
+                            <a href="#" class="icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="icon"><i class="fas fa-external-link-alt"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
         <section class="container" id="blogs">
             <div class="blogs-content">
                 <div class="main-title">
-                    <h2>My <span>Blogs</span><span class="bg-text">My Blogs</span></h2>
+                    <h2>My <span>Blog</span><span class="bg-text">writing</span></h2>
                 </div>
-                <div>
-                <p class="port-text">
-                    This page is under Constuction!
-                </p>    
-                </div>    
                 <div class="blogs">
                     <div class="blog">
                         <a href="blog/posts/post1.html">
-                            <img src="img/port6.jpg" alt="Arista AVD blog hero">
+                            <img src="img/port6.jpg" alt="Arista AVD">
                             <div class="blog-text">
-                                <h4>
-                                    Arista AVD: Network Automation for Large-Scale Enterprise
-                                </h4>
-                                <p>
-                                    A brief overview of Arista Validated Designs, automation patterns, and why it matters for network engineers.
-                                </p>
+                                <h4>Arista AVD: Network Automation for Large-Scale Enterprise</h4>
+                                <p>A look at Arista Validated Designs, automation patterns, and why it matters for network engineers building at scale.</p>
                             </div>
                         </a>
-
                     </div>
                     <div class="blog">
-                        <img src="img/blog1.jpg" alt="">
+                        <img src="img/port1.jpg" alt="BGP">
                         <div class="blog-text">
-                            <h4>
-                                How to Become an Expert in Web Design
-                            </h4>
-                            <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Doloribus natus voluptas, eos obcaecati recusandae amet?
-                            </p>
+                            <h4>BGP Route Reflectors: When and Why to Use Them</h4>
+                            <p>Understanding iBGP scaling challenges and how route reflectors simplify large AS topologies without full-mesh peering.</p>
                         </div>
                     </div>
                     <div class="blog">
-                        <img src="img/blog2.jpg" alt="">
+                        <img src="img/port3.jpg" alt="Ansible">
                         <div class="blog-text">
-                            <h4>
-                                Become a Web Designer in 10 Days
-                            </h4>
-                            <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Doloribus natus voluptas, eos obcaecati recusandae amet?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="blog">
-                        <img src="img/blog3.jpg" alt="">
-                        <div class="blog-text">
-                            <h4>
-                                Debbuging made easy with Web Inspector
-                            </h4>
-                            <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Doloribus natus voluptas, eos obcaecati recusandae amet?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="blog">
-                        <img src="img/port1.jpg" alt="">
-                        <div class="blog-text">
-                            <h4>
-                                Get started with Web Design and UI Design
-                            </h4>
-                            <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Doloribus natus voluptas, eos obcaecati recusandae amet?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="blog">
-                        <img src="img/port3.jpg" alt="">
-                        <div class="blog-text">
-                            <h4>
-                                This is what you need to know about Web Design
-                            </h4>
-                            <p>
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-                                Doloribus natus voluptas, eos obcaecati recusandae amet?
-                            </p>
+                            <h4>Getting Started with Ansible for Network Automation</h4>
+                            <p>How I started automating repetitive network tasks with Ansible playbooks — lessons learned from production rollouts.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
         <section class="container contact" id="contact">
             <div class="contact-container">
                 <div class="main-title">
-                    <h2>Contact <span>Me</span><span class="bg-text">Contact</span></h2>
+                    <h2>Contact <span>Me</span><span class="bg-text">contact</span></h2>
                 </div>
                 <div class="contact-content-con">
                     <div class="left-contact">
-                        <h4>Contact me here</h4>
-                        <p>
-                            For Network consultancy services, please get in touch.
-                        </p>
+                        <h4>Get in touch</h4>
+                        <p>Available for network consultancy, architecture reviews, and automation projects.</p>
                         <div class="contact-info">
                             <div class="contact-item">
                                 <div class="icon">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <span>Location</span>
                                 </div>
-                                <p>
-                                    Edinburgh, United Kingdom
-                                </p>
+                                <p>Edinburgh, United Kingdom</p>
                             </div>
                             <div class="contact-item">
                                 <div class="icon">
                                     <i class="fas fa-envelope"></i>
                                     <span>Email</span>
                                 </div>
-                                <p>
-                                    <span>lateef@cyberglobe.co.uk</span>
-                                </p>
+                                <p>lateef@cyberglobe.co.uk</p>
                             </div>
                             <div class="contact-item">
                                 <div class="icon">
-                                    <i class="fas fa-user-graduate"></i>
-                                    <span>Contact Number</span>
+                                    <i class="fas fa-phone"></i>
+                                    <span>Phone</span>
                                 </div>
-                                <p>
-                                    <span> 07776 255537</span>
-                                </p>
+                                <p>07776 255537</p>
                             </div>
                             <div class="contact-item">
                                 <div class="icon">
                                     <i class="fas fa-globe-africa"></i>
                                     <span>Languages</span>
                                 </div>
-                                <p>
-                                    <span>Urdu, English, Punjabi</span>
-                                </p>
+                                <p>English · Urdu · Punjabi</p>
                             </div>
                         </div>
                         <div class="contact-icons">
                             <div class="contact-icon">
-                                <a href="https://www.twitter.com/lateefwalana" target="_blank" rel="noopener noreferrer">
-                                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                                <a href="https://www.twitter.com/lateefwalana" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
                                 </a>
-                                <a href="https://github.com/lateefwalana" target="_blank" rel="noopener noreferrer">
-                                    <i class="fab fa-github" aria-hidden="true"></i>
+                                <a href="https://github.com/lateefwalana" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                                    <i class="fab fa-github"></i>
                                 </a>
-                                <a href="javascript:void(0)" aria-label="YouTube (coming soon)">
-                                    <i class="fab fa-youtube" aria-hidden="true"></i>
+                                <a href="https://www.linkedin.com/in/lateefwalana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
                                 </a>
                             </div>
                         </div>
@@ -528,11 +350,11 @@
                             </div>
                             <div class="input-control">
                                 <label for="subject" class="sr-only">Subject</label>
-                                <input id="subject" name="subject" type="text" required placeholder="ENTER SUBJECT">
+                                <input id="subject" name="subject" type="text" required placeholder="SUBJECT">
                             </div>
                             <div class="input-control">
                                 <label for="message" class="sr-only">Message</label>
-                                <textarea id="message" name="message" cols="15" rows="8" required placeholder="Message Here..."></textarea>
+                                <textarea id="message" name="message" cols="15" rows="8" required placeholder="MESSAGE..."></textarea>
                             </div>
                             <div class="submit-btn">
                                 <button type="submit" class="main-btn">
@@ -546,7 +368,7 @@
             </div>
         </section>
     </main>
-    <!-- Other sections -->
+
     <nav class="controls" aria-label="Section navigation">
         <button class="control active-btn" data-id="home" aria-label="Home">
             <i class="fas fa-home" aria-hidden="true"></i>
@@ -557,16 +379,18 @@
         <button class="control" data-id="portfolio" aria-label="Portfolio">
             <i class="fas fa-briefcase" aria-hidden="true"></i>
         </button>
-        <button class="control" data-id="blogs" aria-label="Blogs">
+        <button class="control" data-id="blogs" aria-label="Blog">
             <i class="far fa-newspaper" aria-hidden="true"></i>
         </button>
         <button class="control" data-id="contact" aria-label="Contact">
             <i class="fas fa-envelope-open" aria-hidden="true"></i>
         </button>
     </nav>
-    <div class="theme-btn">
+
+    <div class="theme-btn" role="button" aria-label="Toggle light/dark mode" tabindex="0">
         <i class="fas fa-adjust"></i>
     </div>
+
     <script src="/app.js"></script>
 </body>
 </html>

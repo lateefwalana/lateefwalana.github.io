@@ -2,6 +2,21 @@
    Blog post page styles
    ============================================================ */
 
+/* Reset global layout rules that break blog page semantics */
+.blog-page header,
+.blog-page section {
+  position: static;
+  min-height: unset;
+  width: auto;
+  left: unset;
+  top: unset;
+  padding: 0;
+  display: block;
+  transform: none;
+  animation: none;
+  background: transparent;
+}
+
 .blog-page {
   max-width: 780px;
   margin: 0 auto;

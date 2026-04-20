@@ -1,111 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post1</title>
+    <meta name="description" content="Arista AVD 6.0 — what's new, what changed from v5, and what you need to know before upgrading.">
+    <title>Arista AVD 6.0: What's New vs v5 | Muhammad Lateef</title>
     <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="stylesheet" href="/styles/blog.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body class="main-content">
-    <main>
-        <article class="container about" id="about">
-            <header class="main-title">
-                <h2>Arista AVD: Network Automation for Large-Scale Enterprise</h2>
-                <p class="port-text">An Arista AVD introduction and technical value proposition for network engineers.</p>
+
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+    <div class="blog-page">
+
+        <a href="/" class="blog-back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Portfolio
+        </a>
+
+        <article class="blog-article">
+
+            <header class="blog-header">
+                <div class="blog-meta">
+                    <span class="blog-tag">Network Automation</span>
+                    <span class="blog-date">April 2025</span>
+                </div>
+                <h1>Arista AVD 6.0: What's New and What Changed from v5</h1>
+                <p class="blog-lead">
+                    AVD 6.0 is a major release — not a minor bump. Roles have been removed, schemas restructured,
+                    and 60+ deprecated keys are gone for good. Here's a practical breakdown of everything that changed
+                    and what you need to do before upgrading.
+                </p>
+                <div class="blog-author">
+                    <span>By <strong>Muhammad Lateef</strong></span>
+                    <span>Senior Network Engineer · CCNP · Edinburgh</span>
+                </div>
             </header>
 
-            <section>
-                <h3>Why Arista AVD?</h3>
-                <p>Arista AVD (Arista Validated Designs) is a structured, Ansible-based architecture framework designed to
-                simplify deployment, reduce configuration drift, and accelerate multi-site network rollout. It provides
-                repeatable templates, robust validation, and operational best practices for modern campus and WAN fabrics.</p>
+            <!-- INTRO -->
+            <section class="blog-section">
+                <h2>A quick refresher: what is AVD?</h2>
+                <p>
+                    Arista Validated Designs (AVD) is an open-source Ansible collection maintained by Arista Networks
+                    that delivers Network-as-Code for EOS environments. You define your fabric in YAML — spines, leaves,
+                    VLANs, BGP policy, VXLAN EVPN overlays — and AVD renders structured configs, deploys them, and runs
+                    automated tests. It's the closest thing networking has to Terraform for physical infrastructure.
+                </p>
+                <p>
+                    Version 6.0 is the biggest release since the project matured. The headline: Arista have ripped out
+                    legacy integration layers, standardised on ANTA for testing, overhauled the CloudVision deployment
+                    model, and cleaned up years of deprecated schema debt. If you're running v5 in production, this post
+                    will tell you exactly what to expect.
+                </p>
             </section>
 
-            <section>
-                <h3>Core benefits</h3>
-                <ul>
-                    <li><strong>Consistency</strong>: Declarative inventory and templating ensure identical builds across sites.</li>
-                    <li><strong>Speed</strong>: Pre-defined network patterns reduce design-to-deploy from months to days.</li>
-                    <li><strong>Scale</strong>: Native support for large fabric deployments with VXLAN EVPN, MLAG, BGP, and segment routing.</li>
-                    <li><strong>Automation</strong>: Ansible playbooks, tests, and automated rendering eliminate manual CLI scripting.</li>
-                    <li><strong>Observability</strong>: Integration with CloudVision and streaming telemetry improves visibility.</li>
+            <!-- REMOVED ROLES -->
+            <section class="blog-section">
+                <h2>What's gone: three roles removed</h2>
+                <p>
+                    The most impactful change in 6.0 for most teams will be the removal of three core roles. These are
+                    not soft-deprecated — they are gone entirely. Update your playbooks before you do anything else.
+                </p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card removed">
+                        <div class="card-label removed-label">Removed in v6</div>
+                        <code>eos_validate_state</code>
+                        <code>eos_config_deploy_cvp</code>
+                        <code>cvp_configlet_upload</code>
+                        <code>dhcp_provisioner</code>
+                    </div>
+                    <div class="comparison-card added">
+                        <div class="card-label added-label">Replacement in v6</div>
+                        <code>anta_runner</code>
+                        <code>cv_deploy</code>
+                        <code>cv_deploy</code>
+                        <code>— (no replacement)</code>
+                    </div>
+                </div>
+
+                <p>
+                    <strong>eos_validate_state → anta_runner</strong>: The old validation role ran tests directly.
+                    The new <code>anta_runner</code> role is built on top of ANTA (Arista Network Test Automation),
+                    an open-source framework that gives you a proper test catalog, structured results, Markdown
+                    reporting, and the ability to write custom tests. It's a significant improvement — ANTA tests are
+                    typed, composable, and version-controlled like code.
+                </p>
+                <p>
+                    <strong>eos_config_deploy_cvp + cvp_configlet_upload → cv_deploy</strong>: Both legacy CloudVision
+                    roles have been consolidated into <code>cv_deploy</code>. The new role integrates directly with
+                    CloudVision's Static Configuration Studio instead of the older configlet-based workflow. It also
+                    drops the dependency on the <code>arista.cvp</code> collection entirely — one less thing to
+                    maintain.
+                </p>
+                <p>
+                    <strong>dhcp_provisioner</strong>: Removed with no replacement. It was not compatible with modern
+                    DHCP server implementations and had been functionally broken for some time. ZTP workflows should
+                    be handled outside AVD.
+                </p>
+            </section>
+
+            <!-- NEW FEATURES -->
+            <section class="blog-section">
+                <h2>New features in 6.0</h2>
+
+                <h3>ANTA testing — properly integrated</h3>
+                <p>
+                    The new <code>anta_runner</code> role is not just a drop-in replacement for
+                    <code>eos_validate_state</code> — it's a much more capable test framework. AVD 6.0 ships with
+                    a greatly expanded test catalog:
+                </p>
+                <ul class="blog-list">
+                    <li>OSPF tests: <code>VerifyOSPFMaxLSA</code>, <code>VerifyOSPFNeighborState</code></li>
+                    <li>WAN DPS-to-DPS reachability tests between DC and WAN VTEP devices</li>
+                    <li>Inband management reachability tests</li>
+                    <li>BGP tests for non-default VRFs using metadata</li>
+                    <li>Transceiver manufacturer verification</li>
+                    <li>Power supply validation</li>
+                    <li>Inventory verification with <code>VerifyInventory</code></li>
+                    <li>Custom user-defined tests via the ANTA framework</li>
+                    <li>Markdown test result reports sortable by status</li>
+                </ul>
+
+                <h3>IPv6 across the board</h3>
+                <p>
+                    IPv6 support has been significantly expanded. SLAAC (<code>ipv6_address_auto_config</code>) and
+                    IPv6 ND (Neighbor Discovery) are now supported across all interface types: management, Ethernet,
+                    port-channel, VLAN, and tunnel interfaces. IPv6 addressing also now works on <code>core_interfaces</code>
+                    and <code>l3_edge</code> links — something that was a common pain point in v5.
+                </p>
+
+                <h3>Dot1x security model</h3>
+                <p>
+                    A dedicated <code>dot1x_settings</code> model has been introduced, replacing the fragmented
+                    dot1x configuration that was scattered across AAA settings in v5. You can now configure interface
+                    dot1x supplicant support, dynamic authorisation, and radius group linking in a single structured
+                    model.
+                </p>
+
+                <h3>CloudVision and flow telemetry</h3>
+                <p>
+                    Flow tracking export to CloudVision is now natively supported, as is sFlow VRF export. The
+                    <code>cv_deploy</code> role gains proxy support and better error reporting when workspace
+                    submission fails — it now surfaces the list of inactive devices rather than a generic failure.
+                </p>
+
+                <h3>BGP enhancements</h3>
+                <ul class="blog-list">
+                    <li>BGP Auto-RD support — automatic route distinguisher assignment</li>
+                    <li>BGP large communities support</li>
+                    <li>BGP aggregate addresses support</li>
+                    <li>RCF (Routing Control Functions) with BGP network and aggregate statements</li>
+                    <li>EVPN remote domain VRF support</li>
+                    <li>asdot notation support in AS-path ACLs</li>
+                </ul>
+
+                <h3>Platform additions</h3>
+                <p>
+                    New default platform profiles for the <strong>7388X5</strong> and <strong>7060X5</strong>.
+                    MTU defaults adjusted for the CCS 710, 720, 722, and 750 families. cEOS default management
+                    interface changed to <code>Management1</code>. The 7358 platform gains feature support.
+                    Transceiver data model extended for 400G hardware.
+                </p>
+
+                <h3>Other additions worth noting</h3>
+                <ul class="blog-list">
+                    <li>Regex pattern support in <code>platform_settings[].platforms</code></li>
+                    <li>Monitor link-flap and loop-protection support</li>
+                    <li>Spanning-tree link-type support</li>
+                    <li>ARP persistent, aging, and IP ICMP redirect settings</li>
+                    <li>ARP static entries in network services</li>
+                    <li>L2VLAN profiles support</li>
+                    <li>PTP source IP support via router_id</li>
+                    <li>PREVIEW: <code>devices</code> and <code>device_profiles</code> configuration models</li>
                 </ul>
             </section>
 
-            <section>
-                <h3>Key components</h3>
-                <p>AVD is built on a set of modular roles and inventories:</p>
-                <ol>
-                    <li><strong>Design model</strong>: YAML-driven site, role, and segment definitions.</li>
-                    <li><strong>Role-based playbooks</strong>: Deploy EOS config via staged playbooks (build, deploy, verify).</li>
-                    <li><strong>Platform support</strong>: 7000/7200/7800/7500 Series with EOS featureset compatibility.</li>
-                    <li><strong>Validation tests</strong>: Pre- and post- deployment sanity checks using pyATS and NetBox yardstick.</li>
-                </ol>
-            </section>
-
-            <section>
-                <h3>Practical use case</h3>
-                <p>As a senior network engineer, I used Arista AVD to standardize a multi-site corporate campus setup.
-                We defined a common site template with two spine leaf fabrics, OSPF underlay, and EVPN-VXLAN overlay.
-                With AVD, the team had rollouts ready for automation in 2 weeks and deployment for each site in under 4 hours.</p>
-            </section>
-
-            <section>
-                <h3>Getting started</h3>
-                <p>Follow these steps:</p>
-                <ul>
-                    <li>Clone the Arista AVD repository from GitHub.</li>
-                    <li>Create an Ansible inventory for your topology (spines, leaves, border nodes).</li>
-                    <li>Customize site variables for VLANs, BGP, QoS, and APC using role variables.</li>
-                    <li>Run `ansible-playbook -i inventory/hosts.yaml playbooks/site.yml` and validate.</li>
-                    <li>Integrate with CloudVision for telemetry and drift detection.</li>
+            <!-- WAN -->
+            <section class="blog-section">
+                <h2>WAN and CV Pathfinder changes</h2>
+                <p>
+                    If you're running CV Pathfinder or AutoVPN topologies, pay close attention here.
+                </p>
+                <ul class="blog-list">
+                    <li>
+                        <strong><code>wan_mode: autovpn</code> renamed to <code>wan_mode: legacy-autovpn</code></strong>
+                        — update your inventory files.
+                    </li>
+                    <li>
+                        <strong>CV Pathfinder now requires <code>wan_route_servers</code> to be explicitly set</strong>
+                        — AVD will raise an error if you're in CV Pathfinder mode without this configured.
+                    </li>
+                    <li>
+                        <code>wan_use_evpn_node_settings_for_lan</code> variable removed — this is now always
+                        the default behaviour.
+                    </li>
+                    <li>
+                        BGP ECMP default of 4 removed for non-WAN routers — check your underlay if this was
+                        implicit in your design.
+                    </li>
+                    <li>
+                        When <code>cv_settings</code> is defined, NTP and DNS configuration is now
+                        <strong>required</strong>. Previously optional — AVD will error if absent.
+                    </li>
                 </ul>
             </section>
 
-            <section>
-                <h3>Conclusion</h3>
-                <p>Arista AVD is a strong choice for network teams who want a proven, vendor-backed way to deliver network
-                infrastructure as code. It reduces risk, enforces consistency, and moves teams towards DevOps practices
-                in networking.</p>
+            <!-- SCHEMA CHANGES -->
+            <section class="blog-section">
+                <h2>Schema and data model changes</h2>
+                <p>
+                    This is where the upgrade work lives. AVD 6.0 removes 60+ deprecated keys that have been
+                    flagged since v4 and v5. The full porting guide is the authoritative reference, but here
+                    are the categories most teams will hit:
+                </p>
+
+                <h3>Key renames and moves</h3>
+                <div class="code-block">
+                    <div class="code-label">eos_designs — key migrations</div>
+                    <pre><code># DNS settings
+name_servers → dns_settings.servers
+source_interfaces.domain_lookup → dns_settings
+
+# SNMP
+snmp_settings.enable_inband_mgmt_vrf → snmp_settings.vrfs[name="use_inband_mgmt_vrf"].enabled
+snmp_settings.ipv4_acls → snmp_settings.vrfs[].ipv4_acl
+
+# CloudVision / TerminAttr
+terminattr_smashexcludes → cv_settings.terminattr.smashexcludes
+cvp_instance_ips, cvp_token_file → cv_settings
+
+# Static routes
+static_routes[].destination_address_prefix → .prefix
+static_routes[].gateway → .next_hop
+
+# Loopback
+overlay_loopback_description → router_id_loopback_description</code></pre>
+                </div>
+
+                <h3>Metadata consolidation in eos_cli_config_gen</h3>
+                <p>
+                    A large structural refactor moved peer and tenant metadata into explicit <code>metadata</code>
+                    sub-keys across multiple resource types. If you use structured config directly (rather than
+                    purely through eos_designs), you'll need to update these:
+                </p>
+                <ul class="blog-list">
+                    <li>Ethernet/port-channel interfaces: <code>peer</code>, <code>peer_interface</code>, <code>peer_type</code> → <code>metadata.*</code></li>
+                    <li>VLAN interfaces: <code>tenant</code>, <code>tags</code>, <code>type</code> → <code>metadata.*</code></li>
+                    <li>Router BGP peers: <code>description</code>, <code>tenant</code> → <code>metadata.*</code></li>
+                    <li>VLANs/VRFs: <code>tenant</code> → <code>metadata.tenant</code></li>
+                </ul>
+
+                <h3>Strict schema validation — no more warnings</h3>
+                <p>
+                    In v5, you could set <code>avd_data_validation_mode: warning</code> to suppress schema
+                    violations. That option is gone in 6.0. <strong>All schema violations now produce hard
+                    errors.</strong> Custom keys must be prefixed with an underscore (<code>_my_key</code>) to
+                    bypass validation. Run your playbooks in check mode against v6 before you upgrade production.
+                </p>
+
+                <h3>Pattern matching now uses fullmatch</h3>
+                <p>
+                    Schema pattern validation changed from <code>re.match()</code> to <code>re.fullmatch()</code>.
+                    Patterns must match the entire string. If you have custom schema extensions with patterns
+                    like <code>Ethernet.*</code>, update them to fully qualified patterns like
+                    <code>Ethernet[\d/]+</code>.
+                </p>
             </section>
 
-            <footer>
-                <p>Published by <strong>Muhammad Lateef</strong> • Network Engineer, Cloud & Automation</p>
+            <!-- PYTHON -->
+            <section class="blog-section">
+                <h2>Python and dependency changes</h2>
+                <p>
+                    Ansible Core 2.16–2.20 is now the supported range. If you're on <strong>ansible-core 2.19+</strong>,
+                    be aware it introduces stricter Jinja2 templating — undefined variables that were silently
+                    ignored in earlier versions will now surface as errors.
+                </p>
+                <p>
+                    The <code>cvprac</code>, <code>treelib</code>, <code>jsonschema</code> libraries have been
+                    removed as dependencies. The <code>arista.cvp</code> and <code>ansible.utils</code> collections
+                    are no longer bundled — install <code>ansible.utils</code> separately if your playbooks
+                    use it.
+                </p>
+                <p>
+                    The <code>anta</code> library is now a core dependency (previously optional), pinned to v1.7+.
+                    Jinja2 extensions previously required in <code>ansible.cfg</code>
+                    (<code>jinja2.ext.loopcontrols</code>, <code>jinja2.ext.do</code>) can be removed —
+                    they are auto-loaded by PyAVD now.
+                </p>
+            </section>
+
+            <!-- MIGRATION -->
+            <section class="blog-section">
+                <h2>Before you upgrade: a practical checklist</h2>
+
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <span class="checklist-icon"><i class="fas fa-terminal"></i></span>
+                        <div>
+                            <strong>Update your playbooks</strong> — replace <code>eos_validate_state</code> with
+                            <code>anta_runner</code>, and both CVP roles with <code>cv_deploy</code>.
+                        </div>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="checklist-icon"><i class="fas fa-file-code"></i></span>
+                        <div>
+                            <strong>Audit your inventory</strong> — search for all 60+ removed keys using the
+                            <a href="https://avd.arista.com" target="_blank" rel="noopener">v6 porting guide</a>.
+                            Pay particular attention to <code>name_servers</code>, <code>terminattr_*</code>,
+                            <code>snmp_settings</code>, and static route keys.
+                        </div>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="checklist-icon"><i class="fas fa-route"></i></span>
+                        <div>
+                            <strong>WAN teams</strong> — rename <code>wan_mode: autovpn</code> to
+                            <code>legacy-autovpn</code> and add <code>wan_route_servers</code> if running
+                            CV Pathfinder.
+                        </div>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="checklist-icon"><i class="fas fa-shield-alt"></i></span>
+                        <div>
+                            <strong>Remove avd_data_validation_mode: warning</strong> — fix the underlying
+                            schema issues instead. Warnings are now errors.
+                        </div>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="checklist-icon"><i class="fas fa-python"></i></span>
+                        <div>
+                            <strong>Update your Python environment</strong> — install <code>anta&gt;=1.7</code>,
+                            <code>cryptography&gt;=43.0.0</code>, remove <code>cvprac</code>. Drop the Jinja2
+                            extensions from <code>ansible.cfg</code>.
+                        </div>
+                    </div>
+                    <div class="checklist-item">
+                        <span class="checklist-icon"><i class="fas fa-vial"></i></span>
+                        <div>
+                            <strong>Test in a lab first</strong> — run <code>ansible-playbook --check</code>
+                            against your inventory before touching production. The strict schema validation will
+                            surface issues immediately.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONCLUSION -->
+            <section class="blog-section">
+                <h2>Is it worth upgrading?</h2>
+                <p>
+                    Yes — but do your homework first. AVD 6.0 is a cleaner, more maintainable codebase than v5.
+                    The ANTA integration alone is worth it for teams that take validation seriously: you get a real
+                    test framework with proper test catalogs, not a collection of ad-hoc checks. The removal of
+                    the <code>arista.cvp</code> dependency simplifies environments considerably, and the new
+                    <code>cv_deploy</code> role is a better CloudVision integration story.
+                </p>
+                <p>
+                    The migration cost is real — particularly for large inventories with lots of custom variables.
+                    Budget time to go through the porting guide systematically. The AVD team have documented
+                    every change and provide migration guides for all three removed roles.
+                </p>
+                <p>
+                    For greenfield deployments, start on v6 immediately. For production upgrades, plan a lab
+                    validation sprint before you touch anything live.
+                </p>
+            </section>
+
+            <footer class="blog-footer">
+                <div class="blog-footer-meta">
+                    <span>Muhammad Lateef</span>
+                    <span>Senior Network Engineer · Edinburgh</span>
+                    <span>CCNP · VCP · NCA</span>
+                </div>
+                <a href="/" class="main-btn blog-cta">
+                    <span class="btn-text">Back to Portfolio</span>
+                    <span class="btn-icon"><i class="fas fa-arrow-left"></i></span>
+                </a>
             </footer>
-        </article>
-    </main>
 
-    <div class="controls">
-        <div class="control active-btn" data-id="home">
-            <i class="fas fa-home"></i>
-        </div>
-        <div class="control" data-id="about">
-            <i class="fas fa-user"></i>
-        </div>
-        <div class="control" data-id="portfolio">
-            <i class="fas fa-briefcase"></i>
-        </div>
-        <div class="control" data-id="blogs">
-            <i class="far fa-newspaper"></i>
-        </div>
-        <div class="control" data-id="contact">
-            <i class="fas fa-envelope-open"></i>
-        </div>
+        </article>
     </div>
-    <div class="theme-btn">
+
+    <div class="theme-btn" role="button" aria-label="Toggle light/dark mode" tabindex="0">
         <i class="fas fa-adjust"></i>
     </div>
+
     <script src="/app.js"></script>
 </body>
-
 </html>

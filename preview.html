@@ -305,7 +305,7 @@ document.querySelectorAll('[data-count]').forEach(el=>io3.observe(el));
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// 3D network constellation hero
+// 3D spine-leaf fabric hero
 (function(){
   const canvas=document.getElementById('net3d');
   if(!canvas||!window.THREE)return;
@@ -314,98 +314,127 @@ document.querySelectorAll('[data-count]').forEach(el=>io3.observe(el));
   try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true})}catch(e){return}
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 
-  const LIME=0xd4ff3f;
+  const LIME=0xd4ff3f,BG=0x0b0b0d;
   const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(55,1,0.1,100);
-  camera.position.set(1.6,0,7.2);
-  const group=new THREE.Group();
-  scene.add(group);
+  scene.fog=new THREE.Fog(BG,10,22);
+  const camera=new THREE.PerspectiveCamera(42,1,0.1,100);
+  camera.position.set(0,0.9,11);
+  camera.lookAt(0,0,0);
 
-  // --- nodes on a jittered fibonacci sphere ---
-  const N=150,nodes=[];
-  const GA=Math.PI*(3-Math.sqrt(5));
-  for(let i=0;i<N;i++){
-    const y=1-(i/(N-1))*2, rad=Math.sqrt(1-y*y), th=GA*i;
-    const r=2.9+(Math.random()-0.5)*0.9;
-    nodes.push(new THREE.Vector3(Math.cos(th)*rad*r, y*r*0.8, Math.sin(th)*rad*r));
+  const rig=new THREE.Group();scene.add(rig);      // mouse parallax
+  const fab=new THREE.Group();rig.add(fab);        // the fabric itself
+  fab.position.set(1.9,0.2,0);
+  fab.rotation.set(-0.10,-0.42,0);
+
+  // --- switch factory: dark box + lime edges + glow port strip ---
+  const edgeMat=new THREE.LineBasicMaterial({color:LIME,transparent:true,opacity:0.75});
+  const edgeMatDim=new THREE.LineBasicMaterial({color:LIME,transparent:true,opacity:0.28});
+  const fillMat=new THREE.MeshBasicMaterial({color:0x121216});
+  function makeSwitch(w,h,d,dim){
+    const g=new THREE.Group();
+    const geo=new THREE.BoxGeometry(w,h,d);
+    g.add(new THREE.Mesh(geo,fillMat));
+    g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),dim?edgeMatDim:edgeMat));
+    return g;
   }
 
-  // --- edges: each node to its 2 nearest neighbours ---
-  const edges=[],seen=new Set();
-  for(let i=0;i<N;i++){
-    const near=nodes.map((p,j)=>({j,d:p.distanceToSquared(nodes[i])}))
-      .sort((a,b)=>a.d-b.d).slice(1,3);
-    near.forEach(n=>{
-      const key=Math.min(i,n.j)+'-'+Math.max(i,n.j);
-      if(!seen.has(key)){seen.add(key);edges.push([i,n.j])}
-    });
+  // --- Clos topology: 4 spines / 8 leaves / 16 hosts ---
+  const spines=[],leaves=[],hosts=[];
+  for(let i=0;i<4;i++){
+    const s=makeSwitch(1.15,0.24,0.55);
+    s.position.set((i-1.5)*2.0, 2.0, 0);
+    fab.add(s);spines.push(s.position);
   }
-  const lpos=new Float32Array(edges.length*6);
-  edges.forEach(([a,b],k)=>{
-    lpos.set([nodes[a].x,nodes[a].y,nodes[a].z,nodes[b].x,nodes[b].y,nodes[b].z],k*6);
-  });
+  for(let i=0;i<8;i++){
+    const l=makeSwitch(0.78,0.20,0.5);
+    l.position.set((i-3.5)*1.12, 0, 0);
+    fab.add(l);leaves.push(l.position);
+  }
+  for(let i=0;i<16;i++){
+    const h=makeSwitch(0.30,0.34,0.30,true);
+    h.position.set((i-7.5)*0.56, -1.7, ((i%2)-0.5)*0.55);
+    fab.add(h);hosts.push(h.position);
+  }
+
+  // --- links: full spine↔leaf mesh + leaf↔host ---
+  const links=[];
+  spines.forEach(s=>leaves.forEach(l=>links.push([s,l])));
+  hosts.forEach((h,i)=>links.push([leaves[i>>1],h]));
+  const lpos=new Float32Array(links.length*6);
+  links.forEach(([a,b],k)=>lpos.set([a.x,a.y,a.z,b.x,b.y,b.z],k*6));
   const lgeo=new THREE.BufferGeometry();
   lgeo.setAttribute('position',new THREE.BufferAttribute(lpos,3));
-  group.add(new THREE.LineSegments(lgeo,new THREE.LineBasicMaterial({
-    color:LIME,transparent:true,opacity:0.10,blending:THREE.AdditiveBlending,depthWrite:false})));
+  fab.add(new THREE.LineSegments(lgeo,new THREE.LineBasicMaterial(
+    {color:LIME,transparent:true,opacity:0.13,blending:THREE.AdditiveBlending,depthWrite:false})));
 
-  // --- node points (soft round sprite) ---
-  const c2=document.createElement('canvas');c2.width=c2.height=64;
-  const ctx=c2.getContext('2d');
-  const grad=ctx.createRadialGradient(32,32,0,32,32,32);
-  grad.addColorStop(0,'rgba(212,255,63,1)');grad.addColorStop(0.4,'rgba(212,255,63,.45)');
-  grad.addColorStop(1,'rgba(212,255,63,0)');
-  ctx.fillStyle=grad;ctx.fillRect(0,0,64,64);
-  const sprite=new THREE.CanvasTexture(c2);
-  const pgeo=new THREE.BufferGeometry();
-  const ppos=new Float32Array(N*3);
-  nodes.forEach((p,i)=>ppos.set([p.x,p.y,p.z],i*3));
-  pgeo.setAttribute('position',new THREE.BufferAttribute(ppos,3));
-  group.add(new THREE.Points(pgeo,new THREE.PointsMaterial({
-    size:0.14,map:sprite,transparent:true,opacity:0.9,
-    blending:THREE.AdditiveBlending,depthWrite:false})));
+  // --- floor grid for depth ---
+  const grid=new THREE.GridHelper(34,44,0x1e1e24,0x16161b);
+  grid.position.y=-2.6;rig.add(grid);
 
-  // --- travelling packets ---
-  const PK=14,packets=[];
-  const pkGeo=new THREE.SphereGeometry(0.035,8,8);
-  const pkMat=new THREE.MeshBasicMaterial({color:LIME});
+  // --- packet streams: leaf → spine → leaf, and host hops ---
+  const glowTex=(()=>{ // soft round sprite
+    const c=document.createElement('canvas');c.width=c.height=64;
+    const x=c.getContext('2d'),g=x.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(212,255,63,1)');g.addColorStop(.45,'rgba(212,255,63,.5)');
+    g.addColorStop(1,'rgba(212,255,63,0)');
+    x.fillStyle=g;x.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  })();
+  const PK=42,packets=[];
+  const pkMat=new THREE.SpriteMaterial({map:glowTex,color:LIME,transparent:true,
+    blending:THREE.AdditiveBlending,depthWrite:false});
+  function newPath(){
+    // random two-hop journey through the fabric
+    const l1=leaves[Math.floor(Math.random()*8)];
+    const sp=spines[Math.floor(Math.random()*4)];
+    const l2=leaves[Math.floor(Math.random()*8)];
+    const hi=Math.floor(Math.random()*16);
+    return Math.random()<0.3
+      ? [hosts[hi],leaves[hi>>1],spines[Math.floor(Math.random()*4)]]
+      : [l1,sp,l2];
+  }
   for(let i=0;i<PK;i++){
-    const m=new THREE.Mesh(pkGeo,pkMat);
-    packets.push({m,e:Math.floor(Math.random()*edges.length),t:Math.random(),s:0.004+Math.random()*0.01});
-    group.add(m);
+    const m=new THREE.Sprite(pkMat.clone());
+    m.scale.set(0.16,0.16,1);
+    packets.push({m,path:newPath(),t:Math.random()*2,s:0.55+Math.random()*0.9});
+    fab.add(m);
   }
 
   // --- mouse parallax ---
   let mx=0,my=0,tx=0,ty=0;
   addEventListener('pointermove',e=>{
-    tx=(e.clientX/innerWidth-0.5)*0.5;
-    ty=(e.clientY/innerHeight-0.5)*0.3;
+    tx=(e.clientX/innerWidth-0.5);
+    ty=(e.clientY/innerHeight-0.5);
   },{passive:true});
 
   function resize(){
     const w=canvas.clientWidth,h=canvas.clientHeight;
-    if(canvas.width!==w*renderer.getPixelRatio()){
+    if(canvas.width!==Math.floor(w*renderer.getPixelRatio())){
       renderer.setSize(w,h,false);
       camera.aspect=w/h;camera.updateProjectionMatrix();
     }
   }
   addEventListener('resize',resize,{passive:true});
 
-  const clock=new THREE.Clock();
+  const clock=new THREE.Clock();let t0=0;
   (function frame(){
     requestAnimationFrame(frame);
-    // skip work when hero is off-screen
-    if(canvas.getBoundingClientRect().bottom<0)return;
+    if(canvas.getBoundingClientRect().bottom<0)return; // hero off-screen
     resize();
-    const dt=Math.min(clock.getDelta(),0.05);
-    group.rotation.y+=dt*0.07;
-    mx+=(tx-mx)*0.04;my+=(ty-my)*0.04;
-    group.rotation.x=my;group.rotation.z=mx*0.3;
+    const dt=Math.min(clock.getDelta(),0.05);t0+=dt;
+    // gentle breathing sway
+    fab.rotation.y=-0.42+Math.sin(t0*0.18)*0.06;
+    fab.position.y=0.2+Math.sin(t0*0.5)*0.05;
+    // parallax
+    mx+=(tx-mx)*0.05;my+=(ty-my)*0.05;
+    rig.rotation.y=mx*0.22;rig.rotation.x=my*0.12;
+    // packets along their 2-segment paths
     packets.forEach(p=>{
-      p.t+=p.s*(dt*60);
-      if(p.t>=1){p.t=0;p.e=Math.floor(Math.random()*edges.length)}
-      const [a,b]=edges[p.e];
-      p.m.position.lerpVectors(nodes[a],nodes[b],p.t);
+      p.t+=p.s*dt;
+      if(p.t>=2){p.t=0;p.path=newPath()}
+      const seg=p.t<1?0:1, tt=p.t%1;
+      p.m.position.lerpVectors(p.path[seg],p.path[seg+1],tt);
+      p.m.material.opacity=Math.sin(Math.min(p.t/2,1)*Math.PI)*0.9+0.1;
     });
     renderer.render(scene,camera);
   })();

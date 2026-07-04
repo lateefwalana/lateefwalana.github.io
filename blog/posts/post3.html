@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="How to start automating network tasks with Ansible — first playbooks, idempotency, and the lessons production teaches you.">
+<title>Getting Started with Ansible for Network Automation | Muhammad Lateef</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://www.walana.tech/blog/posts/post3.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Getting Started with Ansible for Network Automation">
+<meta property="og:description" content="First playbooks, idempotency, and the lessons production teaches you.">
+<meta property="og:url" content="https://www.walana.tech/blog/posts/post3.html">
+<meta property="og:image" content="https://www.walana.tech/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0d;--panel:#111114;--ink:#f4f4f2;--dim:#9b9ba4;--lime:#d4ff3f;--line:#232328}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:2px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:16.5px;line-height:1.75}
+::selection{background:var(--lime);color:#0b0b0d}
+a{color:var(--lime);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'JetBrains Mono',monospace;font-size:.86em;background:#17171b;border:1px solid var(--line);
+  border-radius:5px;padding:2px 7px;color:var(--lime)}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--lime);box-shadow:0 0 10px var(--lime);z-index:60}
+nav.top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 30px;background:rgba(11,11,13,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top .logo{font-weight:700;font-size:16px;color:var(--ink)}
+nav.top .logo span{color:var(--lime)}
+nav.top .back{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--dim)}
+nav.top .back:hover{color:var(--lime);text-decoration:none}
+.wrap{max-width:760px;margin:0 auto;padding:130px 24px 60px}
+.meta{display:flex;gap:16px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+.meta .tag{color:#0b0b0d;background:var(--lime);border-radius:99px;padding:4px 14px;font-weight:700}
+.meta .date{color:var(--dim)}
+h1{font-size:clamp(32px,6vw,52px);font-weight:700;letter-spacing:-.03em;line-height:1.06;margin:22px 0 20px}
+.lede{font-size:19px;color:var(--dim);line-height:1.6}
+.byline{display:flex;gap:14px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--dim);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:30px 0 10px}
+.byline b{color:var(--ink)}
+section{margin-top:56px}
+h2{font-size:clamp(23px,3.6vw,30px);font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
+h2::before{content:"// ";color:var(--lime);font-family:'JetBrains Mono',monospace;font-size:.8em}
+h3{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:30px 0 12px;color:var(--ink)}
+h3::before{content:"› ";color:var(--lime)}
+p{margin-bottom:16px;color:#cfcfd4}
+strong{color:var(--ink)}
+ul.list{list-style:none;margin:0 0 18px}
+ul.list li{padding:7px 0 7px 26px;position:relative;color:#cfcfd4;border-bottom:1px dashed var(--line)}
+ul.list li:last-child{border-bottom:0}
+ul.list li::before{content:"→";position:absolute;left:0;color:var(--lime)}
+.codeblock{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:22px 0;overflow:hidden}
+.codeblock .head{display:flex;align-items:center;gap:8px;padding:11px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim)}
+.codeblock .head::before{content:"●";color:var(--lime);font-size:10px}
+.codeblock pre{padding:18px;overflow-x:auto}
+.codeblock pre code{background:none;border:0;padding:0;color:#cfe8a0;font-size:13px;line-height:1.8}
+.callout{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--lime);
+  border-radius:0 14px 14px 0;padding:18px 22px;margin:22px 0}
+.callout p{margin:0;font-size:15px}
+footer.post{margin-top:70px;border-top:1px solid var(--line);padding-top:30px;display:flex;
+  justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+footer.post .who{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--dim);line-height:2}
+footer.post .who b{color:var(--ink)}
+.btn{display:inline-block;padding:13px 28px;border-radius:99px;font-weight:700;font-size:15px;
+  background:var(--lime);color:#0b0b0d;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,255,63,.35);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="top">
+  <a class="logo" href="/">walana<span>.</span>tech</a>
+  <a class="back" href="/">← back to portfolio</a>
+</nav>
+
+<article class="wrap">
+
+<header>
+  <div class="meta"><span class="tag">Automation</span><span class="date">July 2026 · 8 min read</span></div>
+  <h1>Getting Started with Ansible for Network Automation</h1>
+  <p class="lede">The hardest part of network automation isn't the tooling — it's trusting a script
+    with a box you'd normally handle like live ordnance. Here's the path I took from ad-hoc SSH
+    sessions to playbooks running against production, and the lessons that came with it.</p>
+  <div class="byline"><span>By <b>Muhammad Lateef</b></span><span>Senior Network Engineer · CCNP · Edinburgh</span></div>
+</header>
+
+<section>
+  <h2>Why Ansible for networks</h2>
+  <p>Most network automation journeys start the same way mine did: a task so repetitive it hurts.
+     Mine was compliance changes across a fleet of switches — the same six lines of config, dozens
+     of devices, a change window, and a human typing into each one. Every device a chance for a typo;
+     every typo a potential incident.</p>
+  <p>Ansible fits networking well for three practical reasons: it's <strong>agentless</strong> (talks SSH/API to
+     devices, nothing to install on a switch), it's <strong>declarative-ish</strong> (you describe state, modules
+     work out the commands), and the inventory model maps naturally onto how network teams already
+     think — sites, roles, device groups.</p>
+</section>
+
+<section>
+  <h2>The minimum viable setup</h2>
+  <p>Three files get you from zero to a working automation. First the inventory:</p>
+  <div class="codeblock">
+    <div class="head">inventory.yml</div>
+    <pre><code>all:
+  children:
+    edinburgh_switches:
+      hosts:
+        edi-leaf-01:
+          ansible_host: 10.10.0.11
+        edi-leaf-02:
+          ansible_host: 10.10.0.12
+      vars:
+        ansible_network_os: arista.eos.eos
+        ansible_connection: ansible.netcommon.network_cli
+        ansible_user: automation</code></pre>
+  </div>
+  <p>Install the vendor collection (<code>ansible-galaxy collection install arista.eos</code> — or
+     <code>cisco.ios</code>, <code>junipernetworks.junos</code>, etc.), then write the first playbook.
+     Make it <strong>read-only</strong>:</p>
+  <div class="codeblock">
+    <div class="head">backup.yml — the safest possible first playbook</div>
+    <pre><code>---
+- name: Back up running configs
+  hosts: edinburgh_switches
+  gather_facts: false
+  tasks:
+    - name: Pull running config
+      arista.eos.eos_config:
+        backup: true
+        backup_options:
+          dir_path: ./backups
+          filename: "{{ inventory_hostname }}.cfg"</code></pre>
+  </div>
+  <p>Run it nightly from cron or CI and you've already built something valuable: point-in-time
+     config history for the whole estate, before you've automated a single change.</p>
+</section>
+
+<section>
+  <h2>Your first change — and the two flags that make it safe</h2>
+  <div class="codeblock">
+    <div class="head">ntp.yml — enforcing standard NTP servers</div>
+    <pre><code>---
+- name: Standardise NTP
+  hosts: edinburgh_switches
+  gather_facts: false
+  tasks:
+    - name: Ensure NTP servers are configured
+      arista.eos.eos_config:
+        lines:
+          - ntp server 10.0.0.100 prefer
+          - ntp server 10.0.0.101
+        save_when: changed</code></pre>
+  </div>
+  <p>Before this ever touches a device, run it with <code>--check --diff</code>. Check mode asks the device
+     what <em>would</em> change without changing it; diff shows you the exact lines. This pair of flags is
+     the single biggest trust-builder for a network engineer starting out — you get the dry-run
+     discipline of a change request, executed in seconds.</p>
+  <div class="callout">
+    <p><strong>Idempotency is the point.</strong> Run the playbook twice; the second run should report
+       <code>changed: 0</code>. Once changes are idempotent, "config drift" stops being an audit finding
+       and becomes something you simply re-run away.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Lessons from production rollouts</h2>
+  <h3>Start read-only, earn write access</h3>
+  <p>Backups, fact gathering, compliance reports. You build the inventory, credentials handling and
+     muscle memory with zero blast radius — and you accumulate evidence that convinces the change
+     board when you propose the first automated write.</p>
+
+  <h3>Git is not optional</h3>
+  <p>Playbooks, inventory, and generated configs live in a repository. The moment two engineers edit
+     the same playbook, or you need to answer "what changed last Tuesday?", version control is the
+     difference between automation and a shared folder of scripts.</p>
+
+  <h3>Vault your credentials from day one</h3>
+  <p>No plaintext passwords in inventory — ever. <code>ansible-vault</code> is built in and takes ten
+     minutes to adopt. Retro-fitting secrets hygiene after credentials have leaked into a repo's
+     history is a far worse afternoon.</p>
+
+  <h3>Limit blast radius mechanically</h3>
+  <p>Use <code>--limit</code> to run against one device, then a site, then the estate. Wire
+     <code>serial: 1</code> into playbooks that touch anything critical so a bad change stops at the
+     first device, not the fiftieth. Structure your first production runs like you'd structure a
+     manual change: canary, verify, proceed.</p>
+
+  <h3>Don't automate what you don't understand</h3>
+  <p>Ansible executes your intent faster — including bad intent. If you can't articulate exactly what
+     a change does on one device by hand, you're not ready to run it against a hundred. Automation
+     amplifies competence and incompetence equally.</p>
+</section>
+
+<section>
+  <h2>Where this leads</h2>
+  <p>Ad-hoc playbooks are the gateway. The mature end state is <strong>network-as-code</strong>: your intended
+     network described in YAML data models, configs generated and validated in CI, devices converged
+     to the model rather than patched by hand. In the Arista world that's
+     <a href="post1.html">AVD</a>; similar patterns exist for every major vendor.
+     But every team I've seen get there started exactly where this post starts — one engineer,
+     one inventory file, one backup playbook.</p>
+</section>
+
+<section>
+  <h2>Summary</h2>
+  <ul class="list">
+    <li>Start with read-only playbooks: backups and facts, zero risk, immediate value</li>
+    <li><code>--check --diff</code> before every write; idempotency as the acceptance test</li>
+    <li>Git for everything, ansible-vault for secrets, <code>--limit</code> and <code>serial</code> for blast radius</li>
+    <li>Automate only what you can do confidently by hand</li>
+    <li>The destination is network-as-code — but the first playbook is the step that matters</li>
+  </ul>
+</section>
+
+<footer class="post">
+  <div class="who">
+    <b>Muhammad Lateef</b><br>
+    Senior Network Engineer · Edinburgh<br>
+    CCNP · VCP · NCA
+  </div>
+  <a class="btn" href="/">← Back to portfolio</a>
+</footer>
+
+</article>
+
+<script>
+const bar=document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+},{passive:true});
+</script>
+</body>
+</html>

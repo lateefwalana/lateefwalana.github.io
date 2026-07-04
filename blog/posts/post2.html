@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="iBGP full-mesh doesn't scale. When route reflectors help, how to design them, and the path-hiding trap to avoid.">
+<title>BGP Route Reflectors: When and Why to Use Them | Muhammad Lateef</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://www.walana.tech/blog/posts/post2.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BGP Route Reflectors: When and Why to Use Them">
+<meta property="og:description" content="iBGP full-mesh doesn't scale. When route reflectors help, how to design them, and the path-hiding trap to avoid.">
+<meta property="og:url" content="https://www.walana.tech/blog/posts/post2.html">
+<meta property="og:image" content="https://www.walana.tech/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0d;--panel:#111114;--ink:#f4f4f2;--dim:#9b9ba4;--lime:#d4ff3f;--line:#232328}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:2px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:16.5px;line-height:1.75}
+::selection{background:var(--lime);color:#0b0b0d}
+a{color:var(--lime);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'JetBrains Mono',monospace;font-size:.86em;background:#17171b;border:1px solid var(--line);
+  border-radius:5px;padding:2px 7px;color:var(--lime)}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--lime);box-shadow:0 0 10px var(--lime);z-index:60}
+nav.top{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 30px;background:rgba(11,11,13,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.top .logo{font-weight:700;font-size:16px;color:var(--ink)}
+nav.top .logo span{color:var(--lime)}
+nav.top .back{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--dim)}
+nav.top .back:hover{color:var(--lime);text-decoration:none}
+.wrap{max-width:760px;margin:0 auto;padding:130px 24px 60px}
+.meta{display:flex;gap:16px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+.meta .tag{color:#0b0b0d;background:var(--lime);border-radius:99px;padding:4px 14px;font-weight:700}
+.meta .date{color:var(--dim)}
+h1{font-size:clamp(32px,6vw,52px);font-weight:700;letter-spacing:-.03em;line-height:1.06;margin:22px 0 20px}
+.lede{font-size:19px;color:var(--dim);line-height:1.6}
+.byline{display:flex;gap:14px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--dim);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:30px 0 10px}
+.byline b{color:var(--ink)}
+section{margin-top:56px}
+h2{font-size:clamp(23px,3.6vw,30px);font-weight:700;letter-spacing:-.02em;margin-bottom:18px}
+h2::before{content:"// ";color:var(--lime);font-family:'JetBrains Mono',monospace;font-size:.8em}
+h3{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:30px 0 12px;color:var(--ink)}
+h3::before{content:"› ";color:var(--lime)}
+p{margin-bottom:16px;color:#cfcfd4}
+strong{color:var(--ink)}
+ul.list{list-style:none;margin:0 0 18px}
+ul.list li{padding:7px 0 7px 26px;position:relative;color:#cfcfd4;border-bottom:1px dashed var(--line)}
+ul.list li:last-child{border-bottom:0}
+ul.list li::before{content:"→";position:absolute;left:0;color:var(--lime)}
+.codeblock{background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:22px 0;overflow:hidden}
+.codeblock .head{display:flex;align-items:center;gap:8px;padding:11px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim)}
+.codeblock .head::before{content:"●";color:var(--lime);font-size:10px}
+.codeblock pre{padding:18px;overflow-x:auto}
+.codeblock pre code{background:none;border:0;padding:0;color:#cfe8a0;font-size:13px;line-height:1.8}
+.callout{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--lime);
+  border-radius:0 14px 14px 0;padding:18px 22px;margin:22px 0}
+.callout p{margin:0;font-size:15px}
+footer.post{margin-top:70px;border-top:1px solid var(--line);padding-top:30px;display:flex;
+  justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+footer.post .who{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--dim);line-height:2}
+footer.post .who b{color:var(--ink)}
+.btn{display:inline-block;padding:13px 28px;border-radius:99px;font-weight:700;font-size:15px;
+  background:var(--lime);color:#0b0b0d;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,255,63,.35);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="top">
+  <a class="logo" href="/">walana<span>.</span>tech</a>
+  <a class="back" href="/">← back to portfolio</a>
+</nav>
+
+<article class="wrap">
+
+<header>
+  <div class="meta"><span class="tag">Routing</span><span class="date">July 2026 · 7 min read</span></div>
+  <h1>BGP Route Reflectors: When and Why to Use Them</h1>
+  <p class="lede">iBGP has a scaling problem baked into its rules. Route reflectors are the standard cure —
+    but they change how best paths propagate, and a careless design can hide routes you needed.
+    Here's how to reason about them.</p>
+  <div class="byline"><span>By <b>Muhammad Lateef</b></span><span>Senior Network Engineer · CCNP · Edinburgh</span></div>
+</header>
+
+<section>
+  <h2>The problem: iBGP full mesh</h2>
+  <p>BGP's loop-prevention rule for iBGP is blunt: <strong>a route learned from one iBGP peer must not be
+     advertised to another iBGP peer.</strong> There's no AS_PATH to detect loops inside your own AS,
+     so BGP simply refuses to relay iBGP-learned routes.</p>
+  <p>The consequence is that every iBGP speaker must peer directly with every other iBGP speaker —
+     a full mesh. The session count grows as <code>n(n-1)/2</code>. Ten routers need 45 sessions.
+     Fifty routers need 1,225. Every new router means touching the config of every existing router —
+     which is exactly the kind of change process that breeds outages.</p>
+</section>
+
+<section>
+  <h2>What a route reflector actually does</h2>
+  <p>A route reflector (RFC 4456) is an iBGP speaker allowed to break the relay rule in a controlled way.
+     You nominate a router as the RR and configure its peers as <strong>clients</strong>. The reflection
+     rules are:</p>
+  <ul class="list">
+    <li>Route from a <strong>client</strong> → reflect to all clients and all non-clients</li>
+    <li>Route from a <strong>non-client</strong> (regular iBGP peer) → reflect to clients only</li>
+    <li>Route from an <strong>eBGP peer</strong> → advertise to everyone, as normal</li>
+  </ul>
+  <p>Clients now need exactly one iBGP session (or two, for redundancy) instead of one per router.
+     The full mesh collapses into a hub-and-spoke of control-plane sessions.</p>
+  <p>Loop prevention moves into two new BGP attributes: <code>ORIGINATOR_ID</code> (the router-id of
+     the router that injected the route — a router drops routes carrying its own) and
+     <code>CLUSTER_LIST</code> (each RR prepends its cluster-id; an RR drops routes already carrying
+     its cluster-id).</p>
+</section>
+
+<section>
+  <h2>When you actually need one</h2>
+  <p>Rules of thumb from production:</p>
+  <ul class="list">
+    <li><strong>Under ~5 iBGP speakers:</strong> full mesh is fine. Don't add moving parts to a network
+        that doesn't need them.</li>
+    <li><strong>Growing beyond that, or adding routers frequently:</strong> route reflectors. The win isn't
+        just session count — it's that adding a router no longer touches every other router.</li>
+    <li><strong>VXLAN EVPN fabrics:</strong> RRs are essentially mandatory. Spines reflect EVPN routes to
+        leaves; nobody full-meshes a fabric. Every leaf peers with two spine RRs and that's the
+        entire overlay control plane.</li>
+    <li><strong>Confederations</strong> are the other RFC answer to the same problem — but in practice they're
+        rare outside very large or historically merged service-provider networks. For an enterprise,
+        RRs win on simplicity almost every time.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Design rules that keep you out of trouble</h2>
+  <h3>Always deploy in pairs</h3>
+  <p>An RR is control-plane concentration: lose your only RR and clients keep forwarding on stale
+     routes but converge on nothing new. Two RRs, every client peering with both. For most designs,
+     give the pair <strong>different cluster-ids</strong> (the default — each uses its router-id) so each
+     client genuinely receives and holds routes from both.</p>
+
+  <h3>Keep the RR out of the data path — or don't, but decide</h3>
+  <p>Nothing requires an RR to forward traffic. In DC fabrics the spine RRs are in the path anyway;
+     in WAN designs a dedicated pair of control-plane-only RRs (even VMs) is a clean pattern.
+     What matters is that you make the choice deliberately — an in-path RR that reflects a best path
+     it wouldn't itself use for forwarding can blackhole traffic if next-hops aren't resolvable
+     everywhere.</p>
+
+  <h3>Beware path hiding</h3>
+  <p>This is the trap. <strong>An RR reflects only its own best path.</strong> If two exits exist for a prefix,
+     clients learn just the one the RR prefers — losing potential ECMP and slowing convergence
+     (clients must wait for the RR to recompute after a failure, rather than failing over to a path
+     they already hold).</p>
+  <div class="callout">
+    <p><strong>Fix:</strong> <code>ADD-PATH</code> (RFC 7911) lets the RR advertise multiple paths per prefix.
+       On modern IOS-XE, NX-OS, EOS and Junos this is a few lines of config. If you run active/active
+       exits behind RRs, you almost certainly want it.</p>
+  </div>
+
+  <h3>Don't touch next-hop-self on reflected routes</h3>
+  <p>RRs must not change the next hop when reflecting (client-to-client reflection with
+     <code>next-hop-self</code> breaks the model and can loop traffic through the RR). Set next-hop-self
+     on the border routers where eBGP routes enter the AS, and make sure your IGP can resolve those
+     next hops everywhere.</p>
+</section>
+
+<section>
+  <h2>Minimal working example</h2>
+  <div class="codeblock">
+    <div class="head">Arista EOS — spine as RR for a leaf pair</div>
+    <pre><code>router bgp 65001
+   router-id 10.0.0.1
+   neighbor LEAVES peer group
+   neighbor LEAVES remote-as 65001
+   neighbor LEAVES update-source Loopback0
+   neighbor LEAVES route-reflector-client
+   neighbor LEAVES send-community extended
+   neighbor 10.0.0.11 peer group LEAVES
+   neighbor 10.0.0.12 peer group LEAVES
+   !
+   address-family evpn
+      neighbor LEAVES activate</code></pre>
+  </div>
+  <div class="codeblock">
+    <div class="head">Cisco IOS-XE — equivalent client config on the RR</div>
+    <pre><code>router bgp 65001
+ bgp cluster-id 10.0.0.1
+ neighbor 10.0.0.11 remote-as 65001
+ neighbor 10.0.0.11 update-source Loopback0
+ neighbor 10.0.0.11 route-reflector-client
+ neighbor 10.0.0.12 remote-as 65001
+ neighbor 10.0.0.12 update-source Loopback0
+ neighbor 10.0.0.12 route-reflector-client</code></pre>
+  </div>
+  <p>Clients need nothing special — they're ordinary iBGP speakers that happen to have only one
+     or two peers. That asymmetry is half the operational appeal.</p>
+</section>
+
+<section>
+  <h2>Summary</h2>
+  <ul class="list">
+    <li>Full mesh scales as n²; route reflectors make iBGP scale linearly</li>
+    <li>Deploy RRs in pairs, clients peer with both, distinct cluster-ids by default</li>
+    <li>RRs reflect only their best path — use ADD-PATH if you need clients to see alternatives</li>
+    <li>Keep next-hop rewriting at the AS edge, not on the reflector</li>
+    <li>Small network? Skip all of this and keep the mesh — simplicity is a feature</li>
+  </ul>
+</section>
+
+<footer class="post">
+  <div class="who">
+    <b>Muhammad Lateef</b><br>
+    Senior Network Engineer · Edinburgh<br>
+    CCNP · VCP · NCA
+  </div>
+  <a class="btn" href="/">← Back to portfolio</a>
+</footer>
+
+</article>
+
+<script>
+const bar=document.getElementById('progress');
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+},{passive:true});
+</script>
+</body>
+</html>
